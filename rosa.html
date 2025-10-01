@@ -2,227 +2,53 @@
 <html lang="pt-br">
 <head>
   <meta charset="utf-8" />
+  <title>Rosa — Tela cheia</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Banner Outubro Rosa (TV 16:9 — compatível)</title>
 
   <style>
-    /* ===== Reset básico ===== */
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      background: #000;   /* letterbox/pillarbox em TVs */
-      color: #2a2a2a;
-      font-family: "Segoe UI", Roboto, Arial, sans-serif;
-      overflow: hidden;   /* sem rolagem */
-    }
-
-    /* ===== Palco 16:9 para TV, compatível com browsers antigos ===== */
-    #stage {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 1920px;              /* base 1080p */
-      height: 1080px;
-      margin-left: -960px;
-      margin-top: -540px;
-      background: radial-gradient(1200px 800px at 80% 20%, #ffb3d6 0%, #ffe6f1 45%, #ffffff 100%);
-      -ms-transform-origin: 50% 50%;
-      transform-origin: 50% 50%;
-      overflow: hidden;
-      border-radius: 24px;        /* bordas suaves (opcional) */
-      box-shadow: 0 10px 30px rgba(0,0,0,.12);
-    }
-
-    /* ===== Layout interno (sem grid/vars/clamp) ===== */
-    .content {
-      position: absolute;
-      left: 60px;
-      top: 120px;
-      width: 900px;               /* coluna de texto */
-      color: #1b1b1b;
-      z-index: 2;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-weight: 700;
-      letter-spacing: .3px;
-      background: rgba(255,90,165,.12);
-      color: #e61e73;
-      border: 1px solid rgba(255,90,165,.35);
-      margin-bottom: 14px;
-    }
-
-    h1 {
-      margin: 0 0 8px 0;
-      font-size: 56px;            /* fixo para 1080p (escala cuida do resto) */
-      line-height: 1.05;
-      color: #1b1b1b;
-      font-weight: 800;
-    }
-
-    .sub {
-      font-size: 22px;
-      color: #4a4a4a;
-      max-width: 900px;
-      line-height: 1.35;
-    }
-
-    .pill-list {
-      margin-top: 24px;
-      display: -ms-flexbox; display: flex;
-      -ms-flex-wrap: wrap; flex-wrap: wrap;
-      gap: 10px;                  /* aceita em browsers um pouco mais novos; abaixo, fallback */
-    }
-    /* fallback de gap: usar margens nos itens */
-    .pill { margin: 5px 10px 0 0; }
-
-    .pill {
-      display: inline-block;
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(0,0,0,.08);
-      background: #fff;
-      font-weight: 700;
-      color: #8a1e57;
-      box-shadow: 0 2px 8px rgba(230,30,115,.12);
-      font-size: 18px;
-    }
-
-    /* ===== Coluna da foto (direita) ===== */
-    .hero {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 50%;                 /* metade direita */
+    /* Ocupa 100% da tela, sem barras/rolagem */
+    html, body {
       height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000;
       overflow: hidden;
     }
-    .hero-img {
-      position: absolute;
-      left: 0; top: 0; right: 0; bottom: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;          /* antigos ignoram -> usamos cover por padrão */
-      object-position: center;
-      filter: saturate(1.05) contrast(1.05);
-      -ms-transform: scale(1.02);
-      transform: scale(1.02);
-    }
-    .overlay {
-      position: absolute;
-      left: 0; top: 0; right: 0; bottom: 0;
-      /* sem mix-blend/backdrop; apenas um degradê simples */
-      background: -ms-linear-gradient(left, rgba(230,30,115,0) 10%, rgba(230,30,115,.25) 65%);
-      background: linear-gradient(90deg, rgba(230,30,115,0) 10%, rgba(230,30,115,.25) 65%);
-    }
 
-    /* ===== “Laço” decorativo no fundo (simplificado) ===== */
-    .ribbon {
-      position: absolute;
-      left: -120px;
-      top: -120px;
-      width: 700px;
-      opacity: .18;
+    /* Plano de fundo com cover (funciona em browsers antigos) */
+    .bg {
+      position: fixed;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background: #000 url('file:///C:/Users/breno.luna/Pictures/Screenshots/tetris.png') center center no-repeat;
+      background-size: cover; /* preenche toda a área */
       z-index: 0;
-      filter: drop-shadow(0 10px 24px rgba(230,30,115,.25));
-      -ms-transform: rotate(-8deg);
-      transform: rotate(-8deg);
     }
 
-    /* ===== Rodapé (logo + texto) ===== */
-    .footer {
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      z-index: 2;
-      padding: 12px 20px;
-      background: rgba(255,255,255,.96);    /* sem backdrop-filter */
-      display: -ms-flexbox; display: flex;
-      -ms-flex-pack: justify; justify-content: space-between;
-      -ms-flex-align: center; align-items: center;
-    }
-    .logo {
-      display: -ms-flexbox; display: flex;
-      -ms-flex-align: center; align-items: center;
-      font-weight: 700; color: #8a1e57;
-    }
-    .logo img { height: 36px; width: auto; border-radius: 8px; margin-right: 10px; }
-    .disclaimer { font-size: 14px; color: #6b2251; }
-
-    /* ===== Ajustes mínimos para telas menores (se abrir fora de TV) ===== */
-    @media (max-width: 1200px){
-      .content { left: 40px; top: 80px; width: 820px; }
-      h1 { font-size: 44px; }
-      .sub { font-size: 18px; }
+    /* Redundância: uma <img> por cima também em cover (onde suportar object-fit) */
+    img.full {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;     /* cobre toda a tela */
+      object-position: 50% 50%;
+      border: 0;
+      z-index: 1;
+      /* Em browsers bem antigos que não suportam object-fit,
+         a .bg já garante o cover como fallback. */
     }
   </style>
 </head>
 <body>
-  <!-- Palco 1080p (escalado para caber na tela da TV) -->
-  <main id="stage" role="img" aria-label="Banner Outubro Rosa: mês de conscientização sobre o câncer de mama">
-    <!-- Laço (SVG) -->
-    <svg class="ribbon" viewBox="0 0 512 512" fill="none" aria-hidden="true">
-      <path d="M256 64c-44 0-80 36-80 80 0 64 80 144 80 144s80-80 80-144c0-44-36-80-80-80z" fill="#ff5aa5"/>
-      <path d="M176 144c-40 8-80 48-96 96-24 72 0 132 44 156 40 22 90 8 138-20-34-45-64-94-86-140 0 0-20-48 0-92z" fill="#ffb3d6"/>
-      <path d="M336 144c40 8 80 48 96 96 24 72 0 132-44 156-40 22-90 8-138-20 34-45 64-94 86-140 0 0 20-48 0-92z" fill="#e61e73"/>
-    </svg>
-
-    <!-- Coluna da imagem (direita) -->
-    <div class="hero" aria-hidden="true">
-      <img class="hero-img" src="assets/outubro-rosa.jpg" alt="">
-      <div class="overlay"></div>
-    </div>
-
-    <!-- Conteúdo de texto (esquerda) -->
-    <section class="content">
-      <span class="badge">🎗 Outubro Rosa</span>
-      <h1>Conscientização salva vidas</h1>
-      <p class="sub">Previna-se: o diagnóstico precoce aumenta as chances de cura. Agende seus exames, conheça seu corpo e incentive quem você ama.</p>
-
-      <div class="pill-list" aria-label="Mensagens-chave">
-        <span class="pill">Autoexame</span>
-        <span class="pill">Mamografia</span>
-        <span class="pill">Informação</span>
-        <span class="pill">Apoio</span>
-      </div>
-    </section>
-
-    <!-- Rodapé -->
-    <footer class="footer">
-      <div class="logo">
-        <img src="assets/sua-logo.png" alt="Logo" />
-        <span>Campanha de Conscientização</span>
-      </div>
-      <small class="disclaimer">Faça seus exames regularmente. Procure orientação médica.</small>
-    </footer>
-  </main>
-
-  <script>
-    /* ===== Escala automática do palco para 16:9 — compatível ===== */
-    (function(){
-      function fitStage(){
-        var sw = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
-        var sh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-        var scale = Math.min(sw/1920, sh/1080);
-        var s = document.getElementById('stage');
-        if (!s) return;
-        s.style.msTransform = 'scale(' + scale + ')';
-        s.style.webkitTransform = 'scale(' + scale + ')';
-        s.style.transform = 'scale(' + scale + ')';
-      }
-      if (window.addEventListener) window.addEventListener('resize', fitStage);
-      else if (window.attachEvent) window.attachEvent('onresize', fitStage);
-      fitStage();
-      setTimeout(fitStage, 120); // TVs que reportam dimensão com atraso
-    })();
-
-    /* ===== Redireciona para index.html após 20s ===== */
-    setTimeout(function(){
-      window.location.replace("index.html");
-    }, 20000);
-  </script>
+  <div class="bg" aria-hidden="true"></div>
+  <img class="full" src="file:///C:/Users/breno.luna/Pictures/Screenshots/tetris.png" alt="Imagem em tela cheia">
 </body>
+<script>
+  setTimeout(function(){
+    window.location.replace("index.html");
+  }, 20000); // 20 segundos
+</script>
+
+  
 </html>
