@@ -162,6 +162,23 @@
     setTimeout(fitStage, 100);
   })();
 
+  /* ===== Tentativa automática de tela cheia ao carregar (silenciosa) ===== */
+  (function(){
+    function goFS(){
+      var el = document.documentElement;
+      var req = el.requestFullscreen || el.msRequestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
+      if (req) { try { req.call(el); } catch(e){} }
+    }
+    // tenta imediatamente após o load (alguns navegadores em modo quiosque permitem)
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(goFS, 0);
+    } else {
+      if (document.addEventListener) document.addEventListener('DOMContentLoaded', function(){ setTimeout(goFS, 0); });
+      else if (document.attachEvent) document.attachEvent('onreadystatechange', function(){ if(document.readyState==='complete'){ goFS(); } });
+    }
+    // se o navegador exigir gesto do usuário, nada visual muda; layout/dados permanecem intactos
+  })();
+
   /* ===== Dados (iguais ao seu arquivo) ===== */
   var PIE = {"placas_labels": ["SFG-5A86", "SFD-2I42", "SFD-0H60", "SFG-0C62", "RHT-5C44", "Outros"], "placas_values": [311840.0, 253520.0, 238890.0, 157070.0, 73240.0, 68280.0], "setores_labels": ["Completos", "Incompletos"], "setores_values": [164, 0], "semana_labels": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"], "semana_values": [172660.0, 207660.0, 192440.0, 184060.0, 139960.0, 159590.0, 0.0], "semanas_mes_labels": ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], "semanas_mes_values": [260580.0, 280240.0, 262460.0, 253090.0]};
   var RES = {"dias_com_dados": 30, "atualizado_em": "01/10/2025 08:07"};
@@ -253,7 +270,7 @@
     }
   })();
 
-  // Fullscreen (com fallbacks)
+  // Fullscreen (com fallbacks no botão manual, caso queira usar)
   (function(){
     var fsBtn=document.getElementById('fsBtn'); if(!fsBtn) return;
     fsBtn.onclick=function(){
@@ -261,15 +278,17 @@
       if(el.requestFullscreen) el.requestFullscreen();
       else if(el.msRequestFullscreen) el.msRequestFullscreen();
       else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      else if(el.mozRequestFullScreen) el.mozRequestFullScreen();
     };
   })();
 
-  // Redireciona para maringa.html após 7s
+  // Redireciona para maringa.html após 9s
   setTimeout(function(){
     window.location.replace("maringa.html");
-  }, 7000);
+  }, 9000);
   </script>
 </body>
 </html>
+
 
 
