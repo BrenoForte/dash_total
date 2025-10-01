@@ -4,335 +4,272 @@
 <meta charset="utf-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Gestão à vista — Slide TV</title>
+<title>Gestão à vista — Cianorte / Setembro (TV 16:9)</title>
 
-<!-- Fontes (mantidas) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
-  /* ====== Cores fixas (sem CSS variables) ====== */
-  /* fundo e texto */
+  * { box-sizing:border-box; }
   html, body { height:100%; }
-  body {
-    margin:0;
-    background:#ffffff;
-    color:#0b1220;
+  body{
+    margin:0; background:#000; color:#0b1220;
     font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    overflow:hidden;
+    overflow:hidden; /* sem rolagem */
   }
 
-  /* Header */
+  /* Palco 16:9 fixo (1920x1080) que será escalado para caber na tela */
+  #stage{
+    position:absolute; left:50%; top:50%;
+    width:1920px; height:1080px;
+    margin-left:-960px; margin-top:-540px;
+    background:#fff;
+    -ms-transform-origin:50% 50%;
+    transform-origin:50% 50%;
+  }
+
+  /* Header fixo em px para o palco 1080p */
   header{
-    height:12vh; min-height:80px; max-height:140px;
+    height:120px; min-height:120px; max-height:120px;
     display:-ms-flexbox; display:flex;
     -ms-flex-align:center; align-items:center;
     -ms-flex-pack:justify; justify-content:space-between;
-    gap:24px;
-    padding:1.2vh 2vw; border-bottom:1px solid #e5e7eb;
+    padding:16px 32px; border-bottom:1px solid #e5e7eb; background:#fff;
   }
-  .title-wrap{
-    display:-ms-flexbox; display:flex;
-    -ms-flex-align:center; align-items:center;
-    gap:16px;
-  }
+  .title-wrap{ display:-ms-flexbox; display:flex; -ms-flex-align:center; align-items:center; gap:16px; }
   .logo-img{ height:72px; width:auto; object-fit:contain; border-radius:12px; border:1px solid #e5e7eb; }
-  h1{ margin:0; font-weight:800; font-size:28px; }
-  .badge{
-    font-size:16px; background:#f1f5f9; border:1px solid #e2e8f0;
-    padding:.6em 1em; border-radius:999px; color:#0f172a;
+  h1{ margin:0; font-weight:800; font-size:36px; line-height:1.1; }
+  .badge{ font-size:18px; background:#f1f5f9; border:1px solid #e2e8f0; padding:.4em .8em; border-radius:999px; color:#0f172a; }
+
+  /* Área útil: 1080 - 120 = 960px */
+  .slide{
+    height:960px; padding:24px 32px; background:#fff;
+    display:-ms-flexbox; display:flex; -ms-flex-wrap:wrap; flex-wrap:wrap;
   }
 
-  /* ====== Layout principal sem CSS Grid (Flex compatível) ====== */
-  .slide{
-    height:88vh;
-    padding:1.6vh 2vw;
-    display:-ms-flexbox; display:flex;
-    -ms-flex-wrap:wrap; flex-wrap:wrap;
-    -ms-flex-direction:row; flex-direction:row;
-    -ms-flex-line-pack:stretch; align-content:stretch;
-    gap:1.6vh 2vw; /* fallback não existe no IE; usaremos margens nos cards */
-  }
+  /* 2 colunas x 2 linhas de cards em 1920x1080 */
   .card{
-    background:#ffffff; border:1px solid #e5e7eb; border-radius:16px;
-    padding:1.2vh 1.2vw;
+    background:#fff; border:1px solid #e5e7eb; border-radius:16px;
+    padding:16px 20px;
     display:-ms-flexbox; display:flex; -ms-flex-direction:column; flex-direction:column;
-    /* 2 colunas */
-    width:calc(50% - 2vw); /* IE11 suporta calc */
-    margin-bottom:1.6vh; /* compensar falta de gap vertical no IE */
+    width:calc(50% - 24px); margin:0 24px 24px 0;
+    height:calc( (960px - 24px) / 2 - 12px ); /* ~468px */
   }
-  .card h3{ margin:0 0 .6vh 0; font-size:22px; color:#0f172a; }
+  .card:nth-child(2n){ margin-right:0; }
+  .card h3{ margin:0 0 8px 0; font-size:24px; color:#0f172a; }
 
   .chart-row{
     display:-ms-flexbox; display:flex;
     -ms-flex-pack:justify; justify-content:space-between;
     -ms-flex-align:center; align-items:center;
-    gap:1.2vw; /* IE ignora; usamos larguras fixas abaixo */
-    -ms-flex:1 1 auto; flex:1 1 auto;
-    min-height:0;
+    -ms-flex:1 1 auto; flex:1 1 auto; min-height:0;
   }
   .chart-box{
     position:relative;
-    -ms-flex: 0 0 58%; flex: 0 0 58%;
+    -ms-flex:0 0 58%; flex:0 0 58%;
     display:-ms-flexbox; display:flex; -ms-flex-align:center; align-items:center; -ms-flex-pack:center; justify-content:center;
     min-width:0; min-height:0;
   }
   .side-values{
-    -ms-flex: 1 1 40%; flex: 1 1 40%;
+    -ms-flex:1 1 40%; flex:1 1 40%;
     display:-ms-flexbox; display:flex; -ms-flex-direction:column; flex-direction:column;
+    margin-left:20px;
   }
   .sv-item{
     display:-ms-flexbox; display:flex; -ms-flex-pack:justify; justify-content:space-between; -ms-flex-align:center; align-items:center;
-    border:1px solid #e5e7eb; border-radius:12px; padding:.6vh .8vw; font-size:18px; margin-bottom:.6vh;
+    border:1px solid #e5e7eb; border-radius:12px; padding:8px 12px; font-size:18px; margin-bottom:8px;
   }
   .sv-left{ display:-ms-flexbox; display:flex; -ms-flex-align:center; align-items:center; color:#334155; }
-  .dot{ width:14px; height:14px; border-radius:50%; display:inline-block; margin-right:.6vw; }
+  .dot{ width:14px; height:14px; border-radius:50%; display:inline-block; margin-right:10px; }
   .sv-value{ font-weight:800; color:#0b1220; }
   canvas{ max-width:100%; max-height:100%; }
-  .fs-btn{ position:fixed; right:1.2vw; bottom:1.2vh; background:#0f172a; color:#fff; border:none; padding:.8em 1em; border-radius:10px; cursor:pointer; font-weight:700; }
 
-  /* ====== Responsividade simples (sem clamp) ====== */
-  @media (max-width:1200px){
-    h1{ font-size:24px; }
-    .card{ width:calc(50% - 2vw); }
-  }
-  @media (max-width:900px){
-    .card{ width:100%; }
+  .fs-btn{
+    position:absolute; right:24px; bottom:24px;
+    background:#0f172a; color:#fff; border:none; padding:12px 16px; border-radius:10px; cursor:pointer; font-weight:700;
   }
 </style>
 </head>
 <body>
-  <header>
-    <div class="title-wrap">
-      <!-- LOGO em vídeo mantida -->
-      <video class="logo-img" autoplay muted loop playsinline>
-        <source src="VIDEOS.mp4" type="video/mp4">Seu navegador não suporta vídeo.
-      </video>
-      <div>
-        <h1>Gestão à vista — Cianorte / Setembro</h1>
-        <div style="color:#64748b; font-size:16px;">Consolidado MÊS</div>
+  <div id="stage">
+    <header>
+      <div class="title-wrap">
+        <video class="logo-img" autoplay muted loop playsinline>
+          <source src="VIDEOS.mp4" type="video/mp4">
+          Seu navegador não suporta vídeo.
+        </video>
+        <div>
+          <h1>Gestão à vista — Cianorte / Setembro</h1>
+          <div class="badge" id="badgeInfo"></div>
+        </div>
       </div>
-    </div>
-    <div class="badge" id="badgeInfo"></div>
-  </header>
+    </header>
 
-  <section class="slide">
-    <div class="card">
-      <h3>Peso por veículo (Top 5 + Outros)</h3>
-      <div class="chart-row">
-        <div class="chart-box"><canvas id="piePlacas"></canvas></div>
-        <div class="side-values" id="sidePlacas"></div>
+    <section class="slide">
+      <div class="card">
+        <h3>Peso por veículo (Top 5 + Outros)</h3>
+        <div class="chart-row">
+          <div class="chart-box"><canvas id="piePlacas"></canvas></div>
+          <div class="side-values" id="sidePlacas"></div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <h3>Setores completos vs incompletos</h3>
-      <div class="chart-row">
-        <div class="chart-box"><canvas id="pieSetores"></canvas></div>
-        <div class="side-values" id="sideSetores"></div>
+      <div class="card">
+        <h3>Setores completos vs incompletos</h3>
+        <div class="chart-row">
+          <div class="chart-box"><canvas id="pieSetores"></canvas></div>
+          <div class="side-values" id="sideSetores"></div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <h3>Peso por semana do mês</h3>
-      <div class="chart-row">
-        <div class="chart-box"><canvas id="pieSemanasMes"></canvas></div>
-        <div class="side-values" id="sideSemanasMes"></div>
+      <div class="card">
+        <h3>Peso por semana do mês</h3>
+        <div class="chart-row">
+          <div class="chart-box"><canvas id="pieSemanasMes"></canvas></div>
+          <div class="side-values" id="sideSemanasMes"></div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <h3>Distribuição do peso por dia da semana</h3>
-      <div class="chart-row">
-        <div class="chart-box"><canvas id="pieSemana"></canvas></div>
-        <div class="side-values" id="sideSemana"></div>
+      <div class="card">
+        <h3>Distribuição do peso por dia da semana</h3>
+        <div class="chart-row">
+          <div class="chart-box"><canvas id="pieSemana"></canvas></div>
+          <div class="side-values" id="sideSemana"></div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <button class="fs-btn" id="fsBtn">Tela cheia</button>
+    <button class="fs-btn" id="fsBtn">Tela cheia</button>
+  </div>
 
-  <!-- ==== Chart.js 2.x (compatível com browsers antigos) ==== -->
+  <!-- Chart.js 2.x + datalabels compatíveis com browsers antigos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 
   <script>
-  /* ===== Dados mantidos ===== */
-  var PIE = {"placas_labels": ["SFG-5A86", "SFD-2I42", "SFD-0H60", "SFG-0C62", "RHT-5C44", "Outros"], "placas_values": [311840.0, 253520.0, 238890.0, 157070.0, 73240.0, 68280.0], "setores_labels": ["Completos", "Incompletos"], "setores_values": [164, 0], "semana_labels": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"], "semana_values": [172660.0, 207660.0, 192440.0, 184060.0, 139960.0, 159590.0, 0.0], "semanas_mes_labels": ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], "semanas_mes_values": [260580.0, 280240.0, 262460.0, 253090.0]};
-  var RES = {"dias_com_dados": 30, "atualizado_em": "01/10/2025 08:07"};
-
-  /* Badge de status (igual) */
+  /* ===== Fit-to-TV: escala 16:9 do palco 1920x1080 ===== */
   (function(){
-    var badge = document.getElementById('badgeInfo');
-    if (badge) {
-      badge.innerText = RES.dias_com_dados + " dias • Atualizado " + (RES.atualizado_em || "");
+    function fitStage(){
+      var sw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      var sh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      var scale = Math.min(sw/1920, sh/1080);
+      var s = document.getElementById('stage');
+      if (!s) return;
+      s.style.msTransform = 'scale(' + scale + ')';
+      s.style.webkitTransform = 'scale(' + scale + ')';
+      s.style.transform = 'scale(' + scale + ')';
     }
+    if (window.addEventListener) window.addEventListener('resize', fitStage);
+    else window.attachEvent('onresize', fitStage);
+    fitStage();
+    setTimeout(fitStage, 100);
   })();
 
-  /* Paleta (fixa) */
+  /* ===== Dados (iguais ao seu arquivo) ===== */
+  var PIE = {"placas_labels": ["SFG-5A86", "SFD-2I42", "SFD-0H60", "SFG-0C62", "RHT-5C44", "Outros"], "placas_values": [311840.0, 253520.0, 238890.0, 157070.0, 73240.0, 68280.0], "setores_labels": ["Completos", "Incompletos"], "setores_values": [164, 0], "semana_labels": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"], "semana_values": [172660.0, 207660.0, 192440.0, 184060.0, 139960.0, 159590.0, 0.0], "semanas_mes_labels": ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], "semanas_mes_values": [260580.0, 280240.0, 262460.0, 253090.0]};
+  var RES = {"dias_com_dados": 30, "atualizado_em": "01/10/2025 08:07"};
   var COLORS = ['#2563eb','#16a34a','#f59e0b','#ef4444','#a855f7','#06b6d4','#7c3aed','#10b981'];
 
-  /* formatação de milhares sem depender de locale */
-  function thousands(v){
-    v = Math.round(+v || 0) + '';
-    return v.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  }
+  function thousands(v){ v = Math.round(+v || 0)+''; return v.replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
 
-  /* Geração de pizza compatível com Chart.js 2.x */
+  (function(){
+    var badge = document.getElementById('badgeInfo');
+    if (badge) badge.innerText = RES.dias_com_dados + " dias • Atualizado " + (RES.atualizado_em||"");
+  })();
+
   function makePie(ctx, labels, values){
-    var total = 0, i;
-    for(i=0;i<values.length;i++){ total += (+values[i] || 0); }
+    var total = 0, i; for(i=0;i<values.length;i++){ total += (+values[i]||0); }
     if (!total) total = 1;
-
-    var colors = [];
-    for(i=0;i<labels.length;i++){ colors.push(COLORS[i % COLORS.length]); }
+    var colors = [], j; for(j=0;j<labels.length;j++){ colors.push(COLORS[j % COLORS.length]); }
 
     return new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: labels,
-        datasets: [{ data: values, backgroundColor: colors, borderWidth: 1 }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        legend: { display: false },
-        cutoutPercentage: 55, /* equivalente ao 'cutout' de v3+ */
-        tooltips: {
-          callbacks: {
-            label: function(tooltipItem, data){
-              var idx = tooltipItem.index;
-              var val = (+values[idx] || 0);
-              var pct = ((val/total)*100).toFixed(1);
-              var label = data.labels[idx] || '';
-              return ' ' + label + ': ' + thousands(val) + ' (' + pct + '%)';
-            }
+      type:'doughnut',
+      data:{ labels:labels, datasets:[{ data:values, backgroundColor:colors, borderWidth:1 }] },
+      options:{
+        responsive:true, maintainAspectRatio:true,
+        legend:{ display:false },
+        cutoutPercentage:55,
+        tooltips:{ callbacks:{
+          label:function(tooltipItem,data){
+            var idx=tooltipItem.index, val=(+values[idx]||0), pct=((val/total)*100).toFixed(1);
+            return ' ' + data.labels[idx] + ': ' + thousands(val) + ' ('+pct+'%)';
           }
-        },
-        plugins: {
-          datalabels: {
-            color: '#0b1220',
-            formatter: function(value, ctx2){
-              var t = 0, j;
-              for(j=0;j<ctx2.chart.data.datasets[0].data.length;j++){
-                t += (+ctx2.chart.data.datasets[0].data[j] || 0);
-              }
-              if (!t) t = 1;
-              return ((value/t)*100).toFixed(0) + '%';
-            },
-            font: { weight:'800', size: 16 }
-          }
-        }
+        }},
+        plugins:{ datalabels:{
+          color:'#0b1220',
+          formatter:function(value, ctx2){
+            var t=0, arr=ctx2.chart.data.datasets[0].data, k;
+            for(k=0;k<arr.length;k++){ t += (+arr[k]||0); }
+            if(!t) t=1; return ((value/t)*100).toFixed(0)+'%';
+          },
+          font:{ weight:'800', size:16 }
+        }}
       }
     });
   }
 
-  /* Placas */
+  // Placas
   (function(){
-    var labels = PIE.placas_labels;
-    var values = PIE.placas_values;
-    var ctx = document.getElementById('piePlacas').getContext('2d');
-    var chart = makePie(ctx, labels, values);
-
-    var total = 0, i;
-    for(i=0;i<values.length;i++){ total += (+values[i] || 0); }
-    if (!total) total = 1;
-
-    var cont = document.getElementById('sidePlacas');
-    if (cont){
-      var html = '';
-      for(i=0;i<labels.length;i++){
-        var v = (+values[i] || 0);
-        var pct = ((v/total)*100).toFixed(1);
-        html += '<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+COLORS[i % COLORS.length]+'"></span>'+labels[i]+'</div><div class="sv-value">'+thousands(v)+' kg ('+pct+'%)</div></div>';
-      }
-      cont.innerHTML = html;
+    var labels=PIE.placas_labels, values=PIE.placas_values;
+    var ctx=document.getElementById('piePlacas').getContext('2d'); makePie(ctx,labels,values);
+    var total=0,i; for(i=0;i<values.length;i++){ total += (+values[i]||0); } if(!total) total=1;
+    var cont=document.getElementById('sidePlacas'); if(cont){
+      var html=''; for(i=0;i<labels.length;i++){ var v=(+values[i]||0), pct=((v/total)*100).toFixed(1);
+        html+='<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+COLORS[i%COLORS.length]+'"></span>'+labels[i]+'</div><div class="sv-value">'+thousands(v)+' kg ('+pct+'%)</div></div>';
+      } cont.innerHTML=html;
     }
   })();
 
-  /* Setores */
+  // Setores
   (function(){
-    var labels = PIE.setores_labels;
-    var values = PIE.setores_values;
-    var ctx = document.getElementById('pieSetores').getContext('2d');
-    var chart = makePie(ctx, labels, values);
-
-    var total = 0, i;
-    for(i=0;i<values.length;i++){ total += (+values[i] || 0); }
-    if (!total) total = 1;
-
-    var cont = document.getElementById('sideSetores');
-    if (cont){
-      var html = '';
-      for(i=0;i<labels.length;i++){
-        var v = (+values[i] || 0);
-        var pct = ((v/total)*100).toFixed(1);
-        html += '<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+COLORS[i % COLORS.length]+'"></span>'+labels[i]+'</div><div class="sv-value">'+thousands(v)+' ('+pct+'%)</div></div>';
-      }
-      cont.innerHTML = html;
+    var labels=PIE.setores_labels, values=PIE.setores_values;
+    var ctx=document.getElementById('pieSetores').getContext('2d'); makePie(ctx,labels,values);
+    var total=0,i; for(i=0;i<values.length;i++){ total += (+values[i]||0); } if(!total) total=1;
+    var cont=document.getElementById('sideSetores'); if(cont){
+      var html=''; for(i=0;i<labels.length;i++){ var v=(+values[i]||0), pct=((v/total)*100).toFixed(1);
+        html+='<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+COLORS[i%COLORS.length]+'"></span>'+labels[i]+'</div><div class="sv-value">'+thousands(v)+' ('+pct+'%)</div></div>';
+      } cont.innerHTML=html;
     }
   })();
 
-  /* Semanas do mês */
+  // Semanas do mês
   (function(){
-    var labels = PIE.semanas_mes_labels;
-    var values = PIE.semanas_mes_values;
-    var ctx = document.getElementById('pieSemanasMes').getContext('2d');
-    var chart = makePie(ctx, labels, values);
-
-    var total = 0, i;
-    for(i=0;i<values.length;i++){ total += (+values[i] || 0); }
-    if (!total) total = 1;
-
-    var cont = document.getElementById('sideSemanasMes');
-    if (cont){
-      var html = '';
-      for(i=0;i<labels.length;i++){
-        var v = (+values[i] || 0);
-        var pct = ((v/total)*100).toFixed(1);
-        html += '<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+COLORS[i % COLORS.length]+'"></span>'+labels[i]+'</div><div class="sv-value">'+thousands(v)+' kg ('+pct+'%)</div></div>';
-      }
-      cont.innerHTML = html;
+    var labels=PIE.semanas_mes_labels, values=PIE.semanas_mes_values;
+    var ctx=document.getElementById('pieSemanasMes').getContext('2d'); makePie(ctx,labels,values);
+    var total=0,i; for(i=0;i<values.length;i++){ total += (+values[i]||0); } if(!total) total=1;
+    var cont=document.getElementById('sideSemanasMes'); if(cont){
+      var html=''; for(i=0;i<labels.length;i++){ var v=(+values[i]||0), pct=((v/total)*100).toFixed(1);
+        html+='<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+COLORS[i%COLORS.length]+'"></span>'+labels[i]+'</div><div class="sv-value">'+thousands(v)+' kg ('+pct+'%)</div></div>';
+      } cont.innerHTML=html;
     }
   })();
 
-  /* Distribuição por dia da semana */
+  // Dia da semana
   (function(){
-    var labels = PIE.semana_labels;
-    var values = PIE.semana_values;
-    var ctx = document.getElementById('pieSemana').getContext('2d');
-    var chart = makePie(ctx, labels, values);
-
-    var total = 0, i;
-    for(i=0;i<values.length;i++){ total += (+values[i] || 0); }
-    if (!total) total = 1;
-
-    var cont = document.getElementById('sideSemana');
-    if (cont){
-      var html = '';
-      for(i=0;i<labels.length;i++){
-        var v = (+values[i] || 0);
-        var pct = ((v/total)*100).toFixed(1);
-        html += '<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+COLORS[i % COLORS.length]+'"></span>'+labels[i]+'</div><div class="sv-value">'+thousands(v)+' kg ('+pct+'%)</div></div>';
-      }
-      cont.innerHTML = html;
+    var labels=PIE.semana_labels, values=PIE.semana_values;
+    var ctx=document.getElementById('pieSemana').getContext('2d'); makePie(ctx,labels,values);
+    var total=0,i; for(i=0;i<values.length;i++){ total += (+values[i]||0); } if(!total) total=1;
+    var cont=document.getElementById('sideSemana'); if(cont){
+      var html=''; for(i=0;i<labels.length;i++){ var v=(+values[i]||0), pct=((v/total)*100).toFixed(1);
+        html+='<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+COLORS[i%COLORS.length]+'"></span>'+labels[i]+'</div><div class="sv-value">'+thousands(v)+' kg ('+pct+'%)</div></div>';
+      } cont.innerHTML=html;
     }
   })();
 
-  /* Botão de tela cheia (opcional em browsers antigos) */
+  // Fullscreen (com fallbacks)
   (function(){
-    var fsBtn = document.getElementById('fsBtn');
-    if (!fsBtn) return;
-    fsBtn.onclick = function(){
-      var el = document.documentElement;
-      if (el.requestFullscreen) el.requestFullscreen();
-      else if (el.msRequestFullscreen) el.msRequestFullscreen(); // IE/Edge antigo
-      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    var fsBtn=document.getElementById('fsBtn'); if(!fsBtn) return;
+    fsBtn.onclick=function(){
+      var el=document.documentElement;
+      if(el.requestFullscreen) el.requestFullscreen();
+      else if(el.msRequestFullscreen) el.msRequestFullscreen();
+      else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
     };
   })();
 
-  /* Redireciona automaticamente para maringa.html após 7 segundos */
+  // Redireciona para maringa.html após 7s
   setTimeout(function(){
     window.location.replace("maringa.html");
   }, 7000);
   </script>
 </body>
 </html>
+
 
