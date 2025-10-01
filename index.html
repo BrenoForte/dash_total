@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -195,6 +194,11 @@
     if (!document.fullscreenElement) document.documentElement.requestFullscreen();
     else document.exitFullscreen();
   });
+
+  // Redireciona automaticamente para maringa.html após 7 segundos
+  setTimeout(() => {
+    window.location.replace("maringa.html");
+  }, 7000);
 </script>
 </body>
 </html>
