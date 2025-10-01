@@ -25,7 +25,7 @@
     .banner{
       position:relative; 
       width:100%;
-      max-width:1280px; /* ajuste livre */
+      max-width:1280px;
       margin: clamp(8px, 3vw, 24px) auto;
       aspect-ratio: 16/9;
       border-radius: 24px;
@@ -35,7 +35,6 @@
       isolation:isolate;
     }
 
-    /* Imagem decorativa à direita (troque o src no HTML) */
     .hero{
       position:absolute; inset:0; pointer-events:none;
       display:grid; grid-template-columns:1fr 1fr; align-items:stretch;
@@ -51,13 +50,11 @@
       transform: scale(1.02);
     }
 
-    /* Overlay suave rosa sobre a foto */
     .overlay{
       position:absolute; inset:0; background: linear-gradient(90deg, transparent 10%, rgba(230,30,115,.25) 65%);
       mix-blend-mode:multiply;
     }
 
-    /* Conteúdo textual à esquerda */
     .content{
       position:relative; z-index:2; height:100%;
       display:flex; flex-direction:column; justify-content:center;
@@ -88,14 +85,12 @@
       box-shadow: 0 2px 8px rgba(230,30,115,.12);
     }
 
-    /* Laço rosa em SVG no fundo (lado esquerdo) */
     .ribbon{
       position:absolute; left:-6%; top:-8%; width:min(44%, 520px); opacity:.18; z-index:0;
       filter: drop-shadow(0 10px 24px rgba(230,30,115,.25));
       transform: rotate(-8deg);
     }
 
-    /* Rodapé opcional com logo */
     .footer{
       position:absolute; left:0; right:0; bottom:0; z-index:2;
       display:flex; justify-content:space-between; align-items:center;
@@ -109,14 +104,12 @@
     .logo img{height:36px; width:auto; border-radius:8px}
     .disclaimer{font-size:12px; color:#6b2251}
 
-    /* Responsivo: em telas estreitas, esconder a foto e focar no texto */
     @media (max-width: 760px){
       .hero{display:none}
       .content{max-width:100%}
       .footer{gap:8px}
     }
 
-    /* Versão para impressão (A4 paisagem) */
     @media print{
       body{background:#fff}
       .banner{box-shadow:none; border:1px solid #ddd; aspect-ratio:auto; height:95vh}
@@ -127,14 +120,12 @@
 <body>
   <main class="banner" role="img" aria-label="Banner Outubro Rosa: mês de conscientização sobre o câncer de mama">
 
-    <!-- SVG do laço rosa (decorativo) -->
     <svg class="ribbon" viewBox="0 0 512 512" fill="none" aria-hidden="true">
       <path d="M256 64c-44 0-80 36-80 80 0 64 80 144 80 144s80-80 80-144c0-44-36-80-80-80z" fill="#ff5aa5"/>
       <path d="M176 144c-40 8-80 48-96 96-24 72 0 132 44 156 40 22 90 8 138-20-34-45-64-94-86-140 0 0-20-48 0-92z" fill="#ffb3d6"/>
       <path d="M336 144c40 8 80 48 96 96 24 72 0 132-44 156-40 22-90 8-138-20 34-45 64-94 86-140 0 0 20-48 0-92z" fill="#e61e73"/>
     </svg>
 
-    <!-- Imagem decorativa à direita: TROQUE o src abaixo pela sua foto/arte -->
     <div class="hero" aria-hidden="true">
       <div class="foto">
         <img src="assets/outubro-rosa.jpg" alt="" />
@@ -142,7 +133,6 @@
       </div>
     </div>
 
-    <!-- Conteúdo do banner -->
     <section class="content">
       <span class="badge">🎗 Outubro Rosa</span>
       <h1>Conscientização salva vidas</h1>
@@ -156,10 +146,8 @@
       </div>
     </section>
 
-    <!-- Rodapé com logo/assinatura (opcional) -->
     <footer class="footer">
       <div class="logo">
-        <!-- TROQUE o src abaixo pela sua logo (PNG/SVG/GIF). Pode ser um GIF animado. -->
         <img src="assets/sua-logo.png" alt="Logo" />
         <span>Campanha de Conscientização</span>
       </div>
@@ -167,11 +155,11 @@
     </footer>
   </main>
 
-  <!-- Observações:
-    1) Substitua a imagem "assets/outubro-rosa.jpg" por uma foto/arte da sua preferência.
-    2) Substitua "assets/sua-logo.png" pela sua logo. GIF é aceito.
-    3) Para GitHub Pages, coloque este arquivo como index.html e crie a pasta /assets com as imagens.
-    4) O layout se adapta para TV (16:9), desktop e celular. Para impressão, use Modo Paisagem.
-  -->
+  <!-- Script de redirecionamento após 20 segundos -->
+  <script>
+    setTimeout(function(){
+      window.location.replace("index.html");
+    }, 20000);
+  </script>
 </body>
 </html>
