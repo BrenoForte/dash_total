@@ -2,57 +2,115 @@
 <html lang="pt-br">
 <head>
 <meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Gestão à vista — Slide TV</title>
+
+<!-- Fontes (mantidas) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --bg:#ffffff; --card:#ffffff; --muted:#475569; --text:#0b1220; --line:#e5e7eb;
-    --c1:#2563eb; --c2:#16a34a; --c3:#f59e0b; --c4:#ef4444; --c5:#a855f7; --c6:#06b6d4; --c7:#7c3aed; --c8:#10b981;
-  }
-  * { box-sizing:border-box; }
+  /* ====== Cores fixas (sem CSS variables) ====== */
+  /* fundo e texto */
   html, body { height:100%; }
-  body { margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; overflow:hidden; }
-  header {
-    height:12vh; min-height:80px; max-height:140px;
-    display:flex; align-items:center; justify-content:space-between; gap:24px;
-    padding:1.2vh 2vw; border-bottom:1px solid var(--line);
+  body {
+    margin:0;
+    background:#ffffff;
+    color:#0b1220;
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    overflow:hidden;
   }
-  .title-wrap { display:flex; align-items:center; gap:16px; }
-  /* === Estilo para a LOGO quando você substituir === */
-  .logo-img { height:72px; width:auto; object-fit:contain; border-radius:12px; border:1px solid #e5e7eb; }
-  /* Placeholder visual enquanto você não substitui pela sua logo */
-  .logo-slot { width:72px; height:72px; border:2px dashed #cbd5e1; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#64748b; background:#f8fafc; }
-  h1 { margin:0; font-weight:800; font-size: clamp(20px, 3.2vh, 42px); }
-  .badge { font-size: clamp(12px, 2vh, 18px); background:#f1f5f9; border:1px solid #e2e8f0; padding:.6em 1em; border-radius:999px; color:#0f172a; }
-  .slide { height:88vh; display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap:1.6vh; padding:1.6vh 2vw; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:1.2vh 1.2vw; display:flex; flex-direction:column; }
-  .card h3 { margin:0 0 .6vh 0; font-size: clamp(16px, 2.4vh, 28px); color:#0f172a; }
-  .chart-row { display:flex; gap:1.2vw; align-items:center; justify-content:space-between; flex:1; min-height:0; }
-  .chart-box { position:relative; flex: 1 1 60%; display:flex; align-items:center; justify-content:center; min-width:0; min-height:0; }
-  .side-values { flex: 1 1 40%; display:flex; flex-direction:column; gap:.6vh; }
-  .sv-item { display:flex; align-items:center; justify-content:space-between; border:1px solid var(--line); border-radius:12px; padding:.6vh .8vw; font-size: clamp(14px, 2.2vh, 22px); }
-  .sv-left { display:flex; align-items:center; gap:.6vw; color:#334155; }
-  .dot { width:14px; height:14px; border-radius:50%; display:inline-block; }
-  .sv-value { font-weight:800; color:#0b1220; }
-  canvas { max-width:100%; max-height:100%; }
-  .legend-inline { margin-top:.6vh; font-size: clamp(12px, 1.8vh, 18px); color:var(--muted); display:flex; flex-wrap:wrap; gap:.6em 1.2em; }
-  .fs-btn { position:fixed; right:1.2vw; bottom:1.2vh; background:#0f172a; color:#fff; border:none; padding:.8em 1em; border-radius:10px; cursor:pointer; font-weight:700; }
+
+  /* Header */
+  header{
+    height:12vh; min-height:80px; max-height:140px;
+    display:-ms-flexbox; display:flex;
+    -ms-flex-align:center; align-items:center;
+    -ms-flex-pack:justify; justify-content:space-between;
+    gap:24px;
+    padding:1.2vh 2vw; border-bottom:1px solid #e5e7eb;
+  }
+  .title-wrap{
+    display:-ms-flexbox; display:flex;
+    -ms-flex-align:center; align-items:center;
+    gap:16px;
+  }
+  .logo-img{ height:72px; width:auto; object-fit:contain; border-radius:12px; border:1px solid #e5e7eb; }
+  h1{ margin:0; font-weight:800; font-size:28px; }
+  .badge{
+    font-size:16px; background:#f1f5f9; border:1px solid #e2e8f0;
+    padding:.6em 1em; border-radius:999px; color:#0f172a;
+  }
+
+  /* ====== Layout principal sem CSS Grid (Flex compatível) ====== */
+  .slide{
+    height:88vh;
+    padding:1.6vh 2vw;
+    display:-ms-flexbox; display:flex;
+    -ms-flex-wrap:wrap; flex-wrap:wrap;
+    -ms-flex-direction:row; flex-direction:row;
+    -ms-flex-line-pack:stretch; align-content:stretch;
+    gap:1.6vh 2vw; /* fallback não existe no IE; usaremos margens nos cards */
+  }
+  .card{
+    background:#ffffff; border:1px solid #e5e7eb; border-radius:16px;
+    padding:1.2vh 1.2vw;
+    display:-ms-flexbox; display:flex; -ms-flex-direction:column; flex-direction:column;
+    /* 2 colunas */
+    width:calc(50% - 2vw); /* IE11 suporta calc */
+    margin-bottom:1.6vh; /* compensar falta de gap vertical no IE */
+  }
+  .card h3{ margin:0 0 .6vh 0; font-size:22px; color:#0f172a; }
+
+  .chart-row{
+    display:-ms-flexbox; display:flex;
+    -ms-flex-pack:justify; justify-content:space-between;
+    -ms-flex-align:center; align-items:center;
+    gap:1.2vw; /* IE ignora; usamos larguras fixas abaixo */
+    -ms-flex:1 1 auto; flex:1 1 auto;
+    min-height:0;
+  }
+  .chart-box{
+    position:relative;
+    -ms-flex: 0 0 58%; flex: 0 0 58%;
+    display:-ms-flexbox; display:flex; -ms-flex-align:center; align-items:center; -ms-flex-pack:center; justify-content:center;
+    min-width:0; min-height:0;
+  }
+  .side-values{
+    -ms-flex: 1 1 40%; flex: 1 1 40%;
+    display:-ms-flexbox; display:flex; -ms-flex-direction:column; flex-direction:column;
+  }
+  .sv-item{
+    display:-ms-flexbox; display:flex; -ms-flex-pack:justify; justify-content:space-between; -ms-flex-align:center; align-items:center;
+    border:1px solid #e5e7eb; border-radius:12px; padding:.6vh .8vw; font-size:18px; margin-bottom:.6vh;
+  }
+  .sv-left{ display:-ms-flexbox; display:flex; -ms-flex-align:center; align-items:center; color:#334155; }
+  .dot{ width:14px; height:14px; border-radius:50%; display:inline-block; margin-right:.6vw; }
+  .sv-value{ font-weight:800; color:#0b1220; }
+  canvas{ max-width:100%; max-height:100%; }
+  .fs-btn{ position:fixed; right:1.2vw; bottom:1.2vh; background:#0f172a; color:#fff; border:none; padding:.8em 1em; border-radius:10px; cursor:pointer; font-weight:700; }
+
+  /* ====== Responsividade simples (sem clamp) ====== */
+  @media (max-width:1200px){
+    h1{ font-size:24px; }
+    .card{ width:calc(50% - 2vw); }
+  }
+  @media (max-width:900px){
+    .card{ width:100%; }
+  }
 </style>
 </head>
 <body>
   <header>
     <div class="title-wrap">
-      <!-- ===================== LOGO_REF_START =====================
-           SUBSTITUA o bloco <div id="logoRef"> abaixo pela sua logo:
-             <img src="C:\Users\breno.luna\Documents\VIDEOS.mp4" alt="Logo" class="logo-img">
-           Dica: você também pode usar um link (URL) ou data URI (base64).
-           ====================== LOGO_REF_END ====================== -->
-      <video class="logo-img" autoplay muted loop playsinline><source src="VIDEOS.mp4" type="video/mp4">Seu navegador não suporta vídeo.</video>
+      <!-- LOGO em vídeo mantida -->
+      <video class="logo-img" autoplay muted loop playsinline>
+        <source src="VIDEOS.mp4" type="video/mp4">Seu navegador não suporta vídeo.
+      </video>
       <div>
         <h1>Gestão à vista — Cianorte / Setembro</h1>
-        <div style="color:#64748b; font-size: clamp(12px, 2vh, 16px);">Consolidado MÊS</div>
+        <div style="color:#64748b; font-size:16px;">Consolidado MÊS</div>
       </div>
     </div>
     <div class="badge" id="badgeInfo"></div>
@@ -91,114 +149,190 @@
 
   <button class="fs-btn" id="fsBtn">Tela cheia</button>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-<script>
-  const PIE = {"placas_labels": ["SFG-5A86", "SFD-2I42", "SFD-0H60", "SFG-0C62", "RHT-5C44", "Outros"], "placas_values": [311840.0, 253520.0, 238890.0, 157070.0, 73240.0, 68280.0], "setores_labels": ["Completos", "Incompletos"], "setores_values": [164, 0], "semana_labels": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"], "semana_values": [172660.0, 207660.0, 192440.0, 184060.0, 139960.0, 159590.0, 0.0], "semanas_mes_labels": ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], "semanas_mes_values": [260580.0, 280240.0, 262460.0, 253090.0]};
-  const RES = {"dias_com_dados": 30, "atualizado_em": "01/10/2025 08:07"};
+  <!-- ==== Chart.js 2.x (compatível com browsers antigos) ==== -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 
-  document.getElementById('badgeInfo').innerText = RES.dias_com_dados + " dias • Atualizado " + (RES.atualizado_em||"");
+  <script>
+  /* ===== Dados mantidos ===== */
+  var PIE = {"placas_labels": ["SFG-5A86", "SFD-2I42", "SFD-0H60", "SFG-0C62", "RHT-5C44", "Outros"], "placas_values": [311840.0, 253520.0, 238890.0, 157070.0, 73240.0, 68280.0], "setores_labels": ["Completos", "Incompletos"], "setores_values": [164, 0], "semana_labels": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"], "semana_values": [172660.0, 207660.0, 192440.0, 184060.0, 139960.0, 159590.0, 0.0], "semanas_mes_labels": ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], "semanas_mes_values": [260580.0, 280240.0, 262460.0, 253090.0]};
+  var RES = {"dias_com_dados": 30, "atualizado_em": "01/10/2025 08:07"};
 
-  const COLORS = ['#2563eb','#16a34a','#f59e0b','#ef4444','#a855f7','#06b6d4','#7c3aed','#10b981'];
-  const thousands = (v) => (v||0).toLocaleString('pt-BR');
+  /* Badge de status (igual) */
+  (function(){
+    var badge = document.getElementById('badgeInfo');
+    if (badge) {
+      badge.innerText = RES.dias_com_dados + " dias • Atualizado " + (RES.atualizado_em || "");
+    }
+  })();
 
-  function makePie(ctx, labels, values) {
-    const total = values.reduce((a,b)=>a+(+b||0),0) || 1;
-    const colors = labels.map((_,i)=> COLORS[i % COLORS.length]);
-    const chart = new Chart(ctx, {
+  /* Paleta (fixa) */
+  var COLORS = ['#2563eb','#16a34a','#f59e0b','#ef4444','#a855f7','#06b6d4','#7c3aed','#10b981'];
+
+  /* formatação de milhares sem depender de locale */
+  function thousands(v){
+    v = Math.round(+v || 0) + '';
+    return v.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  /* Geração de pizza compatível com Chart.js 2.x */
+  function makePie(ctx, labels, values){
+    var total = 0, i;
+    for(i=0;i<values.length;i++){ total += (+values[i] || 0); }
+    if (!total) total = 1;
+
+    var colors = [];
+    for(i=0;i<labels.length;i++){ colors.push(COLORS[i % COLORS.length]); }
+
+    return new Chart(ctx, {
       type: 'doughnut',
-      data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 1 }] },
+      data: {
+        labels: labels,
+        datasets: [{ data: values, backgroundColor: colors, borderWidth: 1 }]
+      },
       options: {
         responsive: true,
         maintainAspectRatio: true,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: (c) => " " + c.label + ": " + thousands(c.parsed||0) + 
-                             " (" + ((c.parsed/total)*100).toFixed(1) + "%)"
+        legend: { display: false },
+        cutoutPercentage: 55, /* equivalente ao 'cutout' de v3+ */
+        tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data){
+              var idx = tooltipItem.index;
+              var val = (+values[idx] || 0);
+              var pct = ((val/total)*100).toFixed(1);
+              var label = data.labels[idx] || '';
+              return ' ' + label + ': ' + thousands(val) + ' (' + pct + '%)';
             }
-          },
-          datalabels: {
-            color: '#0b1220',
-            formatter: (v) => ((v/total)*100).toFixed(0) + "%",
-            font: { weight:'800', size: 16 }
           }
         },
-        cutout: '55%'
-      },
-      plugins: [ChartDataLabels]
+        plugins: {
+          datalabels: {
+            color: '#0b1220',
+            formatter: function(value, ctx2){
+              var t = 0, j;
+              for(j=0;j<ctx2.chart.data.datasets[0].data.length;j++){
+                t += (+ctx2.chart.data.datasets[0].data[j] || 0);
+              }
+              if (!t) t = 1;
+              return ((value/t)*100).toFixed(0) + '%';
+            },
+            font: { weight:'800', size: 16 }
+          }
+        }
+      }
     });
-    return {chart, colors, total};
   }
 
-  // === Placas (com lista lateral) ===
+  /* Placas */
   (function(){
-    const labels = PIE.placas_labels;
-    const values = PIE.placas_values;
-    const ctx = document.getElementById('piePlacas').getContext('2d');
-    const {colors, total} = makePie(ctx, labels, values);
-    const cont = document.getElementById('sidePlacas');
-    cont.innerHTML = labels.map((l,i)=>{
-      const v = values[i]||0;
-      const pct = ((v/total)*100).toFixed(1);
-      return '<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+colors[i]+'"></span>'+l+'</div><div class="sv-value">'+thousands(v)+' kg ('+pct+'%)</div></div>';
-    }).join('');
+    var labels = PIE.placas_labels;
+    var values = PIE.placas_values;
+    var ctx = document.getElementById('piePlacas').getContext('2d');
+    var chart = makePie(ctx, labels, values);
+
+    var total = 0, i;
+    for(i=0;i<values.length;i++){ total += (+values[i] || 0); }
+    if (!total) total = 1;
+
+    var cont = document.getElementById('sidePlacas');
+    if (cont){
+      var html = '';
+      for(i=0;i<labels.length;i++){
+        var v = (+values[i] || 0);
+        var pct = ((v/total)*100).toFixed(1);
+        html += '<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+COLORS[i % COLORS.length]+'"></span>'+labels[i]+'</div><div class="sv-value">'+thousands(v)+' kg ('+pct+'%)</div></div>';
+      }
+      cont.innerHTML = html;
+    }
   })();
 
-  // === Setores (com lista lateral de totais) ===
+  /* Setores */
   (function(){
-    const labels = PIE.setores_labels;
-    const values = PIE.setores_values;
-    const ctx = document.getElementById('pieSetores').getContext('2d');
-    const {colors, total} = makePie(ctx, labels, values);
-    const cont = document.getElementById('sideSetores');
-    cont.innerHTML = labels.map((l,i)=>{
-      const v = values[i]||0;
-      const pct = ((v/total)*100).toFixed(1);
-      return '<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+colors[i]+'"></span>'+l+'</div><div class="sv-value">'+thousands(v)+' ('+pct+'%)</div></div>';
-    }).join('');
+    var labels = PIE.setores_labels;
+    var values = PIE.setores_values;
+    var ctx = document.getElementById('pieSetores').getContext('2d');
+    var chart = makePie(ctx, labels, values);
+
+    var total = 0, i;
+    for(i=0;i<values.length;i++){ total += (+values[i] || 0); }
+    if (!total) total = 1;
+
+    var cont = document.getElementById('sideSetores');
+    if (cont){
+      var html = '';
+      for(i=0;i<labels.length;i++){
+        var v = (+values[i] || 0);
+        var pct = ((v/total)*100).toFixed(1);
+        html += '<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+COLORS[i % COLORS.length]+'"></span>'+labels[i]+'</div><div class="sv-value">'+thousands(v)+' ('+pct+'%)</div></div>';
+      }
+      cont.innerHTML = html;
+    }
   })();
 
-  // === Semanas do mês (mantido com números ao lado) ===
+  /* Semanas do mês */
   (function(){
-    const labels = PIE.semanas_mes_labels;
-    const values = PIE.semanas_mes_values;
-    const ctx = document.getElementById('pieSemanasMes').getContext('2d');
-    const {colors, total} = makePie(ctx, labels, values);
-    const cont = document.getElementById('sideSemanasMes');
-    cont.innerHTML = labels.map((l,i)=>{
-      const v = values[i]||0;
-      const pct = ((v/total)*100).toFixed(1);
-      return '<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+colors[i]+'"></span>'+l+'</div><div class="sv-value">'+thousands(v)+' kg ('+pct+'%)</div></div>';
-    }).join('');
+    var labels = PIE.semanas_mes_labels;
+    var values = PIE.semanas_mes_values;
+    var ctx = document.getElementById('pieSemanasMes').getContext('2d');
+    var chart = makePie(ctx, labels, values);
+
+    var total = 0, i;
+    for(i=0;i<values.length;i++){ total += (+values[i] || 0); }
+    if (!total) total = 1;
+
+    var cont = document.getElementById('sideSemanasMes');
+    if (cont){
+      var html = '';
+      for(i=0;i<labels.length;i++){
+        var v = (+values[i] || 0);
+        var pct = ((v/total)*100).toFixed(1);
+        html += '<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+COLORS[i % COLORS.length]+'"></span>'+labels[i]+'</div><div class="sv-value">'+thousands(v)+' kg ('+pct+'%)</div></div>';
+      }
+      cont.innerHTML = html;
+    }
   })();
 
-  // === Dia da semana (com legenda lateral por dia) ===
+  /* Distribuição por dia da semana */
   (function(){
-    const labels = PIE.semana_labels;
-    const values = PIE.semana_values;
-    const ctx = document.getElementById('pieSemana').getContext('2d');
-    const {colors, total} = makePie(ctx, labels, values);
-    const cont = document.getElementById('sideSemana');
-    cont.innerHTML = labels.map((l,i)=>{
-      const v = values[i]||0;
-      const pct = ((v/total)*100).toFixed(1);
-      return '<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+colors[i]+'"></span>'+l+'</div><div class="sv-value">'+thousands(v)+' kg ('+pct+'%)</div></div>';
-    }).join('');
+    var labels = PIE.semana_labels;
+    var values = PIE.semana_values;
+    var ctx = document.getElementById('pieSemana').getContext('2d');
+    var chart = makePie(ctx, labels, values);
+
+    var total = 0, i;
+    for(i=0;i<values.length;i++){ total += (+values[i] || 0); }
+    if (!total) total = 1;
+
+    var cont = document.getElementById('sideSemana');
+    if (cont){
+      var html = '';
+      for(i=0;i<labels.length;i++){
+        var v = (+values[i] || 0);
+        var pct = ((v/total)*100).toFixed(1);
+        html += '<div class="sv-item"><div class="sv-left"><span class="dot" style="background:'+COLORS[i % COLORS.length]+'"></span>'+labels[i]+'</div><div class="sv-value">'+thousands(v)+' kg ('+pct+'%)</div></div>';
+      }
+      cont.innerHTML = html;
+    }
   })();
 
-  // Fullscreen button
-  const fsBtn = document.getElementById('fsBtn');
-  fsBtn.addEventListener('click', () => {
-    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-    else document.exitFullscreen();
-  });
+  /* Botão de tela cheia (opcional em browsers antigos) */
+  (function(){
+    var fsBtn = document.getElementById('fsBtn');
+    if (!fsBtn) return;
+    fsBtn.onclick = function(){
+      var el = document.documentElement;
+      if (el.requestFullscreen) el.requestFullscreen();
+      else if (el.msRequestFullscreen) el.msRequestFullscreen(); // IE/Edge antigo
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    };
+  })();
 
-  // Redireciona automaticamente para maringa.html após 7 segundos
-  setTimeout(() => {
+  /* Redireciona automaticamente para maringa.html após 7 segundos */
+  setTimeout(function(){
     window.location.replace("maringa.html");
   }, 7000);
-</script>
+  </script>
 </body>
 </html>
+
