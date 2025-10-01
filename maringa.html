@@ -4,49 +4,73 @@
 <meta charset="utf-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Gestão à vista — Maringá / Setembro</title>
+<title>Gestão à vista — Maringá / Setembro (TV 16:9)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
-  /* ===== Sem CSS variables / clamp; compatível com browsers antigos ===== */
+  /* ===== Base para TV: palco 1920x1080 escalado, compatível com browsers antigos ===== */
   * { box-sizing:border-box; }
   html, body { height:100%; }
   body {
-    margin:0; background:#ffffff; color:#0b1220;
+    margin:0;
+    background:#000;              /* letterbox/pillarbox preto */
+    color:#0b1220;
     font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    overflow:hidden;
+    overflow:hidden;              /* sem rolagem */
   }
+
+  /* Palco 16:9 fixo que será escalado para caber na tela */
+  #stage {
+    position:absolute;
+    left:50%; top:50%;
+    width:1920px; height:1080px;  /* resolução base */
+    margin-left:-960px;           /* centraliza pelo meio */
+    margin-top:-540px;
+    background:#ffffff;           /* fundo da área de conteúdo */
+    /* escala aplicada via JS: transform: scale(S) */
+    -ms-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+  }
+
+  /* ===== Header fixo em px para caber no 1080px ===== */
   header{
-    height:12vh; min-height:80px; max-height:140px;
+    height:120px;                 /* cabeçalho fixo */
+    min-height:120px; max-height:120px;
     display:-ms-flexbox; display:flex;
     -ms-flex-align:center; align-items:center;
     -ms-flex-pack:justify; justify-content:space-between;
-    padding:1.2vh 2vw; border-bottom:1px solid #e5e7eb;
+    padding:16px 32px;
+    border-bottom:1px solid #e5e7eb;
+    background:#ffffff;
   }
   .title-wrap{ display:-ms-flexbox; display:flex; -ms-flex-align:center; align-items:center; }
   .logo-img{ height:72px; width:128px; object-fit:cover; border-radius:12px; border:1px solid #e5e7eb; }
-  h1{ margin:0 0 6px 16px; font-weight:800; font-size:28px; }
-  .badge{ display:inline-block; margin-left:16px; font-size:16px; background:#f1f5f9; border:1px solid #e2e8f0; padding:.4em .8em; border-radius:999px; color:#0f172a; }
+  h1{ margin:0 0 6px 16px; font-weight:800; font-size:36px; line-height:1.1; }
+  .badge{ display:inline-block; margin-left:16px; font-size:18px; background:#f1f5f9; border:1px solid #e2e8f0; padding:.4em .8em; border-radius:999px; color:#0f172a; }
 
-  /* ===== Layout principal sem Grid (Flex responsivo) ===== */
+  /* ===== Área de conteúdo: 1080-120 = 960px de altura útil ===== */
   .slide{
-    height:88vh;
-    padding:1.6vh 2vw;
+    height:960px;                 /* todo o restante da tela */
+    padding:24px 32px;
     display:-ms-flexbox; display:flex;
     -ms-flex-wrap:wrap; flex-wrap:wrap;
     -ms-flex-direction:row; flex-direction:row;
+    background:#ffffff;
   }
+
+  /* Cards: 2 colunas x 2 linhas em 1920x1080 */
   .card{
     background:#ffffff; border:1px solid #e5e7eb; border-radius:16px;
-    padding:1.2vh 1.2vw;
+    padding:16px 20px;
     display:-ms-flexbox; display:flex; -ms-flex-direction:column; flex-direction:column;
-    width:calc(50% - 2vw);  /* duas colunas */
-    margin:0 1vw 1.6vh 0;   /* espaçamento (substitui gap) */
+    width:calc(50% - 24px);       /* duas colunas (ajuste fino do espaçamento) */
+    margin:0 24px 24px 0;         /* gap manual */
+    height:calc( (960px - 24px) / 2 - 12px ); /* ~ 468px por card (duas linhas) */
   }
   .card:nth-child(2n){ margin-right:0; } /* fecha linha a cada 2 cards */
-  .card h3{ margin:0 0 .6vh 0; font-size:22px; color:#0f172a; }
+  .card h3{ margin:0 0 8px 0; font-size:24px; color:#0f172a; }
 
   .chart-row{
     display:-ms-flexbox; display:flex;
@@ -64,78 +88,96 @@
   .side-values{
     -ms-flex:1 1 40%; flex:1 1 40%;
     display:-ms-flexbox; display:flex; -ms-flex-direction:column; flex-direction:column;
-    margin-left:1.2vw;
+    margin-left:20px;
   }
   .sv-item{
     display:-ms-flexbox; display:flex; -ms-flex-pack:justify; justify-content:space-between; -ms-flex-align:center; align-items:center;
-    border:1px solid #e5e7eb; border-radius:12px; padding:.6vh .8vw; font-size:18px; margin-bottom:.6vh;
+    border:1px solid #e5e7eb; border-radius:12px; padding:8px 12px; font-size:18px; margin-bottom:8px;
   }
   .sv-left{ display:-ms-flexbox; display:flex; -ms-flex-align:center; align-items:center; color:#334155; }
-  .dot{ width:14px; height:14px; border-radius:50%; display:inline-block; margin-right:.6vw; }
+  .dot{ width:14px; height:14px; border-radius:50%; display:inline-block; margin-right:10px; }
   .sv-value{ font-weight:800; color:#0b1220; }
   canvas{ max-width:100%; max-height:100%; }
-  .fs-btn{ position:fixed; right:1.2vw; bottom:1.2vh; background:#0f172a; color:#fff; border:none; padding:.8em 1em; border-radius:10px; cursor:pointer; font-weight:700; }
 
-  /* ===== Responsivo simples ===== */
-  @media (max-width:900px){
-    .card{ width:100%; margin-right:0; }
-    h1{ font-size:24px; }
+  .fs-btn{
+    position:absolute; right:24px; bottom:24px;
+    background:#0f172a; color:#fff; border:none; padding:12px 16px; border-radius:10px; cursor:pointer; font-weight:700;
   }
 </style>
 </head>
 <body>
-  <header>
-    <div class="title-wrap">
-      <video class="logo-img" autoplay muted loop playsinline>
-        <source src="C:/Users/breno.luna/Documents/VIDEOS.mp4" type="video/mp4">
-        Seu navegador não suporta vídeo.
-      </video>
-      <div>
-        <h1>Gestão à vista — Maringá / Setembro</h1>
-        <div class="badge" id="badgeInfo"></div>
+  <div id="stage">
+    <header>
+      <div class="title-wrap">
+        <video class="logo-img" autoplay muted loop playsinline>
+          <source src="C:/Users/breno.luna/Documents/VIDEOS.mp4" type="video/mp4">
+          Seu navegador não suporta vídeo.
+        </video>
+        <div>
+          <h1>Gestão à vista — Maringá / Setembro</h1>
+          <div class="badge" id="badgeInfo"></div>
+        </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <section class="slide">
-    <div class="card">
-      <h3>Distribuição por dia da semana</h3>
-      <div class="chart-row">
-        <div class="chart-box"><canvas id="pieDiaSemana"></canvas></div>
-        <div class="side-values" id="sideDiaSemana"></div>
+    <section class="slide">
+      <div class="card">
+        <h3>Distribuição por dia da semana</h3>
+        <div class="chart-row">
+          <div class="chart-box"><canvas id="pieDiaSemana"></canvas></div>
+          <div class="side-values" id="sideDiaSemana"></div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <h3>Peso por semana do mês</h3>
-      <div class="chart-row">
-        <div class="chart-box"><canvas id="pieSemanas"></canvas></div>
-        <div class="side-values" id="sideSemanas"></div>
+      <div class="card">
+        <h3>Peso por semana do mês</h3>
+        <div class="chart-row">
+          <div class="chart-box"><canvas id="pieSemanas"></canvas></div>
+          <div class="side-values" id="sideSemanas"></div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <h3>Inservíveis do mês</h3>
-      <div class="chart-row">
-        <div class="chart-box"><canvas id="piePlacas"></canvas></div>
-        <div class="side-values" id="sidePlacas"></div>
+      <div class="card">
+        <h3>Inservíveis do mês</h3>
+        <div class="chart-row">
+          <div class="chart-box"><canvas id="piePlacas"></canvas></div>
+          <div class="side-values" id="sidePlacas"></div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <h3>Setores abrangidos (meta 100%)</h3>
-      <div class="chart-row">
-        <div class="chart-box"><canvas id="pieSetores"></canvas></div>
-        <div class="side-values" id="sideSetores"></div>
+      <div class="card">
+        <h3>Setores abrangidos (meta 100%)</h3>
+        <div class="chart-row">
+          <div class="chart-box"><canvas id="pieSetores"></canvas></div>
+          <div class="side-values" id="sideSetores"></div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <button class="fs-btn" id="fsBtn">Tela cheia</button>
+    <button class="fs-btn" id="fsBtn">Tela cheia</button>
+  </div>
 
   <!-- Chart.js compatível com browsers antigos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 
   <script>
-  // ===== Dados preservados do arquivo original =====
+  /* ===== Fit-to-TV: calcula escala para 16:9 (1920x1080) ===== */
+  (function(){
+    function fitStage(){
+      var sw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      var sh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      var scale = Math.min(sw/1920, sh/1080);
+      var s = document.getElementById('stage');
+      if (!s) return;
+      s.style.msTransform = 'scale(' + scale + ')';
+      s.style.webkitTransform = 'scale(' + scale + ')';
+      s.style.transform = 'scale(' + scale + ')';
+    }
+    window.addEventListener ? window.addEventListener('resize', fitStage) : window.attachEvent('onresize', fitStage);
+    fitStage();
+    // pequena correção após load para TVs que reportam dimensões com atraso
+    setTimeout(fitStage, 100);
+  })();
+
+  // ===== Dados preservados =====
   var PIE = {"dia_semana_labels": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"], "dia_semana_values": [111680.0, 123720.0, 127360.0, 114700.0, 115980.0, 109390.0, 0.0], "semanas_mes_labels": ["Semana 1", "Semana 2", "Semana 3", "Semana 4"], "semanas_mes_values": [181610.0, 175060.0, 172490.0, 173670.0], "placas_labels": ["Inservíveis"], "placas_values": [161180.0], "setores_labels": ["Abrangidos", "Não abrangidos"], "setores_values": [100, 0]};
   var RES = {"peso_total": 702830.0, "media_semana": 175707.5, "atualizado_em": "01/10/2025 08:02"};
   var COLORS = ['#2563eb','#16a34a','#f59e0b','#ef4444','#a855f7','#06b6d4','#7c3aed','#10b981'];
@@ -271,7 +313,7 @@
     }
   })();
 
-  // Botão de tela cheia (com fallbacks)
+  // Fullscreen (com fallbacks)
   (function(){
     var fsBtn = document.getElementById('fsBtn');
     if (!fsBtn) return;
@@ -290,3 +332,4 @@
   </script>
 </body>
 </html>
+
