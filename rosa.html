@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Banner Outubro Rosa</title>
+  <style>
+    :root{
+      --rosa-1:#ffe6f1;
+      --rosa-2:#ffb3d6;
+      --rosa-3:#ff5aa5;
+      --rosa-4:#e61e73;
+      --texto:#2a2a2a;
+      --branco:#ffffff;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: "Segoe UI", Roboto, Ubuntu, Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 80% 20%, var(--rosa-2) 0%, var(--rosa-1) 45%, #fff 100%);
+      color:var(--texto);
+    }
+
+    /* Container em proporção 16:9 para TV/Slides */
+    .banner{
+      position:relative; 
+      width:100%;
+      max-width:1280px; /* ajuste livre */
+      margin: clamp(8px, 3vw, 24px) auto;
+      aspect-ratio: 16/9;
+      border-radius: 24px;
+      background: linear-gradient(135deg, var(--rosa-2), #fff 35%, var(--rosa-1));
+      overflow:hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,.12);
+      isolation:isolate;
+    }
+
+    /* Imagem decorativa à direita (troque o src no HTML) */
+    .hero{
+      position:absolute; inset:0; pointer-events:none;
+      display:grid; grid-template-columns:1fr 1fr; align-items:stretch;
+    }
+    .hero > .foto{
+      grid-column:2; position:relative; overflow:hidden;
+      mask-image: linear-gradient(90deg, transparent, black 20%, black 80%, transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, transparent, black 20%, black 80%, transparent 100%);
+    }
+    .hero > .foto img{
+      width:100%; height:100%; object-fit:cover; object-position:center;
+      filter: saturate(1.05) contrast(1.05);
+      transform: scale(1.02);
+    }
+
+    /* Overlay suave rosa sobre a foto */
+    .overlay{
+      position:absolute; inset:0; background: linear-gradient(90deg, transparent 10%, rgba(230,30,115,.25) 65%);
+      mix-blend-mode:multiply;
+    }
+
+    /* Conteúdo textual à esquerda */
+    .content{
+      position:relative; z-index:2; height:100%;
+      display:flex; flex-direction:column; justify-content:center;
+      padding: clamp(16px, 4vw, 48px);
+      max-width: min(640px, 70%);
+    }
+
+    .badge{
+      display:inline-flex; align-items:center; gap:.5rem;
+      padding: .4rem .75rem; border-radius:999px; font-weight:600; letter-spacing:.3px;
+      background: rgba(255,90,165,.12); color: var(--rosa-4);
+      border:1px solid rgba(255,90,165,.35);
+      width:max-content;
+    }
+
+    h1{
+      font-size: clamp(28px, 5vw, 56px);
+      line-height:1.05; margin:.4em 0 .25em; color:#1b1b1b;
+    }
+    .sub{
+      font-size: clamp(14px, 1.8vw, 20px); color:#4a4a4a; max-width:60ch;
+    }
+
+    .pill-list{display:flex; flex-wrap:wrap; gap:.5rem; margin:1.25rem 0}
+    .pill{
+      padding:.55rem .9rem; border-radius:999px; border:1px solid rgba(0,0,0,.08);
+      background: #fff; font-weight:600; color:#8a1e57;
+      box-shadow: 0 2px 8px rgba(230,30,115,.12);
+    }
+
+    /* Laço rosa em SVG no fundo (lado esquerdo) */
+    .ribbon{
+      position:absolute; left:-6%; top:-8%; width:min(44%, 520px); opacity:.18; z-index:0;
+      filter: drop-shadow(0 10px 24px rgba(230,30,115,.25));
+      transform: rotate(-8deg);
+    }
+
+    /* Rodapé opcional com logo */
+    .footer{
+      position:absolute; left:0; right:0; bottom:0; z-index:2;
+      display:flex; justify-content:space-between; align-items:center;
+      padding: 12px 20px; gap:12px;
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,.85) 40%, rgba(255,255,255,.95));
+      backdrop-filter: blur(4px);
+    }
+    .logo{
+      display:flex; align-items:center; gap:10px; font-weight:700; color:#8a1e57;
+    }
+    .logo img{height:36px; width:auto; border-radius:8px}
+    .disclaimer{font-size:12px; color:#6b2251}
+
+    /* Responsivo: em telas estreitas, esconder a foto e focar no texto */
+    @media (max-width: 760px){
+      .hero{display:none}
+      .content{max-width:100%}
+      .footer{gap:8px}
+    }
+
+    /* Versão para impressão (A4 paisagem) */
+    @media print{
+      body{background:#fff}
+      .banner{box-shadow:none; border:1px solid #ddd; aspect-ratio:auto; height:95vh}
+      .footer{background:#fff}
+    }
+  </style>
+</head>
+<body>
+  <main class="banner" role="img" aria-label="Banner Outubro Rosa: mês de conscientização sobre o câncer de mama">
+
+    <!-- SVG do laço rosa (decorativo) -->
+    <svg class="ribbon" viewBox="0 0 512 512" fill="none" aria-hidden="true">
+      <path d="M256 64c-44 0-80 36-80 80 0 64 80 144 80 144s80-80 80-144c0-44-36-80-80-80z" fill="#ff5aa5"/>
+      <path d="M176 144c-40 8-80 48-96 96-24 72 0 132 44 156 40 22 90 8 138-20-34-45-64-94-86-140 0 0-20-48 0-92z" fill="#ffb3d6"/>
+      <path d="M336 144c40 8 80 48 96 96 24 72 0 132-44 156-40 22-90 8-138-20 34-45 64-94 86-140 0 0 20-48 0-92z" fill="#e61e73"/>
+    </svg>
+
+    <!-- Imagem decorativa à direita: TROQUE o src abaixo pela sua foto/arte -->
+    <div class="hero" aria-hidden="true">
+      <div class="foto">
+        <img src="assets/outubro-rosa.jpg" alt="" />
+        <div class="overlay"></div>
+      </div>
+    </div>
+
+    <!-- Conteúdo do banner -->
+    <section class="content">
+      <span class="badge">🎗 Outubro Rosa</span>
+      <h1>Conscientização salva vidas</h1>
+      <p class="sub">Previna-se: o diagnóstico precoce aumenta as chances de cura. Agende seus exames, conheça seu corpo e incentive quem você ama.</p>
+
+      <div class="pill-list" aria-label="Mensagens-chave">
+        <span class="pill">Autoexame</span>
+        <span class="pill">Mamografia</span>
+        <span class="pill">Informação</span>
+        <span class="pill">Apoio</span>
+      </div>
+    </section>
+
+    <!-- Rodapé com logo/assinatura (opcional) -->
+    <footer class="footer">
+      <div class="logo">
+        <!-- TROQUE o src abaixo pela sua logo (PNG/SVG/GIF). Pode ser um GIF animado. -->
+        <img src="assets/sua-logo.png" alt="Logo" />
+        <span>Campanha de Conscientização</span>
+      </div>
+      <small class="disclaimer">Faça seus exames regularmente. Procure orientação médica.</small>
+    </footer>
+  </main>
+
+  <!-- Observações:
+    1) Substitua a imagem "assets/outubro-rosa.jpg" por uma foto/arte da sua preferência.
+    2) Substitua "assets/sua-logo.png" pela sua logo. GIF é aceito.
+    3) Para GitHub Pages, coloque este arquivo como index.html e crie a pasta /assets com as imagens.
+    4) O layout se adapta para TV (16:9), desktop e celular. Para impressão, use Modo Paisagem.
+  -->
+</body>
+</html>
