@@ -94,12 +94,8 @@
   <div id="stage">
     <header>
       <div class="title-wrap">
-        <!-- Vídeo com reforços de compatibilidade + fallback -->
-        <video id="logoVid" class="logo-img" autoplay muted loop playsinline preload="auto">
-          <source src="VIDEOS.mp4" type="video/mp4">
-          <!-- Fallback (estático) caso o vídeo não toque -->
-          <img src="logo-fallback.png" alt="Logo">
-        </video>
+        <!-- Substituído: vídeo -> GIF -->
+        <img class="logo-img" src="anima.gif" alt="Logo animado">
         <div>
           <h1>Gestão à vista — Cianorte / Setembro</h1>
           <div class="badge" id="badgeInfo"></div>
@@ -164,22 +160,40 @@
     setTimeout(fitStage, 100);
   })();
 
-  /* ==== Fullscreen (tenta em eventos de virada + gesto) ==== */
+  /* ==== Fullscreen em TV antiga: tenta na virada de página e em gestos ==== */
   (function(){
     function reqFS(){
       var el = document.documentElement;
       var fn = el.requestFullscreen || el.msRequestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
-      if (fn) { try { fn.call(el); } catch(e){} }
+      if (fn) {
+        try { fn.call(el); } catch(e) {}
+      }
     }
+
     function tryAutoFS(){
-      reqFS(); setTimeout(reqFS,150); setTimeout(reqFS,500); setTimeout(reqFS,1200); setTimeout(reqFS,2500);
+      reqFS();
+      setTimeout(reqFS, 150);
+      setTimeout(reqFS, 500);
+      setTimeout(reqFS, 1200);
+      setTimeout(reqFS, 2500);
     }
-    if (document.readyState === 'complete' || document.readyState === 'interactive') { tryAutoFS(); }
-    else if (document.addEventListener) { document.addEventListener('DOMContentLoaded', tryAutoFS); }
-    else if (document.attachEvent) { document.attachEvent('onreadystatechange', function(){ if(document.readyState==='complete'){ tryAutoFS(); } }); }
-    if (typeof window.onpageshow !== 'undefined') window.addEventListener('pageshow', tryAutoFS);
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      tryAutoFS();
+    } else if (document.addEventListener) {
+      document.addEventListener('DOMContentLoaded', tryAutoFS);
+    } else if (document.attachEvent) {
+      document.attachEvent('onreadystatechange', function(){
+        if (document.readyState === 'complete') tryAutoFS();
+      });
+    }
+
+    if (typeof window.onpageshow !== 'undefined') {
+      window.addEventListener('pageshow', tryAutoFS);
+    }
     if (window.addEventListener) window.addEventListener('focus', tryAutoFS);
     else if (window.attachEvent) window.attachEvent('onfocusin', tryAutoFS);
+
     function gestureFS(){ reqFS(); }
     if (document.addEventListener){
       document.addEventListener('keydown', gestureFS, true);
@@ -190,37 +204,6 @@
       document.attachEvent('onclick',  gestureFS);
       document.attachEvent('ontouchstart', gestureFS);
     }
-  })();
-
-  /* ==== Força play do vídeo de logo em TVs/browsers antigos ==== */
-  (function(){
-    var v = document.getElementById('logoVid');
-    if (!v) return;
-
-    function safePlay(){
-      try{
-        v.muted = true; // reforço pra autoplay antigo
-        var r = v.play && v.play();
-        if (r && r.then){ r.then(function(){}).catch(retry); }
-      }catch(e){ retry(); }
-    }
-
-    var tries = 0;
-    function retry(){
-      tries++;
-      if (tries < 5) setTimeout(safePlay, tries * 500);
-      // se nada funcionar, deixamos o <img> fallback dentro do <video>
-    }
-
-    if (v.addEventListener){
-      v.addEventListener('loadeddata', safePlay);
-      v.addEventListener('canplay', safePlay);
-    }
-    if (document.addEventListener) document.addEventListener('visibilitychange', function(){ if(!document.hidden) safePlay(); });
-    if (window.addEventListener) window.addEventListener('focus', safePlay);
-
-    // tentativa inicial
-    safePlay();
   })();
 
   /* ===== Dados (iguais ao seu arquivo) ===== */
@@ -329,11 +312,10 @@
   // Redireciona para maringa.html após 9s
   setTimeout(function(){
     window.location.replace("maringa.html");
-  }, 19000);
+  }, 9000);
   </script>
 </body>
 </html>
-
 
 
 
