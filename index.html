@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Gestão à vista — Cianorte / Setembro (OPERAÇÕES)</title>
+<title>Gestão à vista — Cianorte / Setembro (TV 16:9)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -162,21 +162,50 @@
     setTimeout(fitStage, 100);
   })();
 
-  /* ===== Tentativa automática de tela cheia ao carregar (silenciosa) ===== */
+  /* ==== Fullscreen em TV antiga: tenta na virada de página e em gestos ==== */
   (function(){
-    function goFS(){
+    function reqFS(){
       var el = document.documentElement;
-      var req = el.requestFullscreen || el.msRequestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
-      if (req) { try { req.call(el); } catch(e){} }
+      var fn = el.requestFullscreen || el.msRequestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
+      if (fn) {
+        try { fn.call(el); } catch(e) {}
+      }
     }
-    // tenta imediatamente após o load (alguns navegadores em modo quiosque permitem)
+
+    function tryAutoFS(){
+      reqFS();
+      setTimeout(reqFS, 150);
+      setTimeout(reqFS, 500);
+      setTimeout(reqFS, 1200);
+      setTimeout(reqFS, 2500);
+    }
+
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
-      setTimeout(goFS, 0);
-    } else {
-      if (document.addEventListener) document.addEventListener('DOMContentLoaded', function(){ setTimeout(goFS, 0); });
-      else if (document.attachEvent) document.attachEvent('onreadystatechange', function(){ if(document.readyState==='complete'){ goFS(); } });
+      tryAutoFS();
+    } else if (document.addEventListener) {
+      document.addEventListener('DOMContentLoaded', tryAutoFS);
+    } else if (document.attachEvent) {
+      document.attachEvent('onreadystatechange', function(){
+        if (document.readyState === 'complete') tryAutoFS();
+      });
     }
-    // se o navegador exigir gesto do usuário, nada visual muda; layout/dados permanecem intactos
+
+    if (typeof window.onpageshow !== 'undefined') {
+      window.addEventListener('pageshow', tryAutoFS);
+    }
+    if (window.addEventListener) window.addEventListener('focus', tryAutoFS);
+    else if (window.attachEvent) window.attachEvent('onfocusin', tryAutoFS);
+
+    function gestureFS(){ reqFS(); }
+    if (document.addEventListener){
+      document.addEventListener('keydown', gestureFS, true);
+      document.addEventListener('click',  gestureFS, true);
+      document.addEventListener('touchstart', gestureFS, true);
+    } else if (document.attachEvent){
+      document.attachEvent('onkeydown', gestureFS);
+      document.attachEvent('onclick',  gestureFS);
+      document.attachEvent('ontouchstart', gestureFS);
+    }
   })();
 
   /* ===== Dados (iguais ao seu arquivo) ===== */
@@ -270,7 +299,7 @@
     }
   })();
 
-  // Fullscreen (com fallbacks no botão manual, caso queira usar)
+  // Fullscreen (botão manual, caso queira usar na TV)
   (function(){
     var fsBtn=document.getElementById('fsBtn'); if(!fsBtn) return;
     fsBtn.onclick=function(){
@@ -289,6 +318,7 @@
   </script>
 </body>
 </html>
+
 
 
 
